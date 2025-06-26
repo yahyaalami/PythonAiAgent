@@ -1,6 +1,42 @@
-# PythonAgentAI
+# 🧠 AI Agent Assistant with FastAPI, LlamaIndex & SerpAPI
 
-The **PythonAgentAI** project aims to leverage advanced OpenAI models (including `gpt-4o-mini` with a 128k context window) to perform a variety of AI-powered tasks. This project integrates [**Scrapeless**](https://www.scrapeless.com/en?utm_source=github&utm_medium=readme&utm_campaign=twt) for [Google Maps](https://www.scrapeless.com/en/product/deep-serp-api?utm_source=github&utm_medium=readme&utm_campaign=twt) and the **llama-index** library (version 0.12.22) along with its experimental extensions to enable large language models to provide real-time responses.
+This project is an intelligent assistant that combines natural language prompts with structured data querying. It uses LlamaIndex and OpenAI to answer questions about:
+
+- 🌍 World population statistics
+- 📄 Country-specific data (e.g., Canada)
+- ☕ Coffee shops around the National Gallery of Canada (using SerpAPI)
+- 📝 Note-taking (save user-generated text to a file)
+
+A simple `FastAPI` server exposes the agent through a REST API running on `localhost`.
+
+---
+
+## 📦 Features
+
+- 🤖 **ReAct Agent** powered by OpenAI (`gpt-4o` or `gpt-3.5`)
+- 🧾 **CSV querying** via `PandasQueryEngine` (world population)
+- 📄 **PDF querying** via `LlamaIndex` (Canada data)
+- ☕ **Live coffee shop data** from SerpAPI + distance filtering
+- 💡 **Note-saving tool**
+- 🚀 **FastAPI endpoint** for local interaction: `/query?prompt=...`
+
+---
+
+## 🧰 Tech Stack
+
+| Layer        | Tools Used |
+|--------------|------------|
+| Backend      | FastAPI, Python |
+| LLM Agent    | LlamaIndex, OpenAI |
+| Embeddings   | OpenAI Embeddings |
+| Data Sources | CSV, PDF, SerpAPI |
+| Query Engine | ReActAgent + Pandas |
+| Scraping     | SerpAPI |
+| Environment  | Python 3.10+ |
+
+---
+
+
 
 ## Features
 
@@ -10,100 +46,65 @@ The **PythonAgentAI** project aims to leverage advanced OpenAI models (including
 
 ## Installation
 
-### Prerequisites
+### 1. Clone this repository
+bash
+git clone https://github.com/yourusername/ai-agent-assistant.git
+cd ai-agent-assistant
 
-- Python 3.11 must be installed on your system. You can download it from the [official Python website](https://www.python.org/downloads/).
-
-## Configuration
-
-1. **Create the `.env` File**
-
-   The project requires a `.env` file for storing environment variables, including the OpenAI API key. You can create it by running:
-
-   ```bash
-   cp .env.example .env
-   ```
-
-2. **Set Your OpenAI API Key**
-
-   Open the `.env` file in a text editor and configure your OpenAI API key:
-
-   ```
-   OPENAI_API_KEY=your_openai_api_key_here
-   ```
-
-   Replace `your_openai_api_key_here` with your actual API key from OpenAI.
-
-- **Log into [Scrapeless](https://app.scrapeless.com/passport/login?utm_source=github&utm_medium=readme&utm_campaign=twt) and obtain your API token.**
-
-![Get the Scrapeless API key](https://assets.scrapeless.com/prod/posts/naver-product/77c0cef86a29013173eb41a34f42d3f4.png)
-
-### Setup Instructions
-
-1. **Clone the Repository**
-
-   Open your terminal and run:
-
-   ```bash
-   git clone https://github.com/your-username/PythonAgentAI.git
-   cd PythonAgentAI
-   ```
-
-2. **Create a Virtual Environment**
-
-   It's recommended to use a virtual environment to manage dependencies. To create one using Python's `venv` module:
-
-   ```bash
-   python3.11 -m venv env
-   ```
-
-3. **Activate the Virtual Environment**
-
-   - On **Unix or macOS**:
-
-     ```bash
-     source env/bin/activate
-     ```
-
-   - On **Windows**:
-
-     ```bash
-     .\env\Scripts\activate
-     ```
-
-4. **Install Dependencies**
-
-   With the virtual environment activated, install the required packages:
-
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-   This will install the following essential packages:
-
-   - `llama-index==0.12.22`
-   - `llama-index-experimental==0.5.4`
-   - `pypdf==5.3.1`
-   - `python-dotenv==1.0.1`
-   - `pandas==2.2.3`
-
-## Usage
-
-After setting up the environment and installing the dependencies, you can run the main script:
-
-```bash
-python main.py
-```
+### 2. Create and activate virtual environment
+python -m venv env
+source env/bin/activate        # macOS/Linux
+env\Scripts\activate           # Windows
 
 
-Ensure that you have configured any necessary environment variables or settings required by the script. Refer to the `prompts.py` and `note_engine.py` files for customizable parameters and functionalities.
+### 3. Install dependencies
+pip install -r requirements.txt
 
-2. **Input the provided prompts to receive results**. After a short wait, you’ll see output similar to the images below:
 
-- **Find the highest rated coffee shop within 0.5km**
+### 4. Create a .env file
+OPENAI_API_KEY=sk-...
+SERPAPI_API_KEY=your-serpapi-key
 
-![Result of the highest rated coffee shop within 0.5km](https://assets.scrapeless.com/prod/posts/deep-serp-api-online/4ea1b12e422967bccd0db82282cb0270.png)
- 
-- **Find the closest coffee shop to the target location**
 
-![Result of the closest coffee shop to the location](https://assets.scrapeless.com/prod/posts/deep-serp-api-online/d7e32f4d01913dbd7b76e15983ce46e2.png)
+## ▶️ Running the App
+### 1. Start the FastAPI server
+uvicorn app:app --reload
+
+### 2. Access it at
+http://localhost:8000/docs
+
+Use the /query endpoint: GET /query?prompt=Find the highest rated coffee shop within 1km
+
+
+## 📁 Project Structure
+.
+├── data/
+│   ├── Canada.pdf
+│   ├── notes.txt
+│   └── population.csv
+├── env/                   # virtual env (not committed)
+├── app.py                 # FastAPI app
+├── main.py                # Agent + tools + engine setup
+├── pdf.py                 # PDF querying tool
+├── coffee_scraper.py      # SerpAPI coffee shop scraper
+├── note_engine.py         # Tool to save notes
+├── prompts.py             # Prompt templates
+├── test.py                # Test file (optional)
+├── .env                   # API keys
+├── .gitignore
+├── README.md              # This file
+└── requirements.txt
+
+### ✅ Example Prompts
+What is the population of India in 2020?
+Find the closest 3 coffee shops
+How many people live in Europe?
+List coffee shops with rating > 4.5 and distance < 1km
+Save note: Remember to try Café Art next week.
+
+### 🧠 Future Ideas
+Add Vue.js/React frontend to interact visually
+Save query history in a database
+Extend to multiple countries and datasets
+Add authentication to secure the endpoint
+
