@@ -48,7 +48,8 @@ A simple `FastAPI` server exposes the agent through a REST API running on `local
 
 ### 1. Clone this repository
 bash
-git clone https://github.com/yourusername/ai-agent-assistant.git
+git clone https://github.com/yahyaalami/PythonAiAgent.git
+
 cd ai-agent-assistant
 
 ### 2. Create and activate virtual environment
